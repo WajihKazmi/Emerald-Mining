@@ -30,6 +30,7 @@ class AppButton {
                 borderRadius: BorderRadius.circular(radius?.r ?? 30.0.r),
               ),
               padding: EdgeInsets.symmetric(horizontal: 25.w),
+
               backgroundColor: Colors.transparent,
               // minimumSize:
               //     Size(width?.w ?? double.infinity.w, height?.h ?? 50.0.h),

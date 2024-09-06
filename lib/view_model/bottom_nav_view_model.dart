@@ -6,6 +6,7 @@ class BottomNavViewModel extends ChangeNotifier {
 
   void changeTabIndex(int index) {
     _tabIndex = index;
+    print(index);
     notifyListeners();
   }
 }

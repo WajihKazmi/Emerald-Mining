@@ -26,18 +26,16 @@ class SignUpScreenState extends State<SignUpScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (didPop) {
-       
-      },
+      onPopInvoked: (didPop) {},
       child: Scaffold(
         extendBody: true,
+        extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           toolbarHeight: 80,
           leading: IconButton(
             onPressed: () {
@@ -51,121 +49,138 @@ class SignUpScreenState extends State<SignUpScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Consumer<SignUpViewModel>(
-              builder: (context, signUpProvider, child) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Form(
-                key: signUpProvider.formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    40.verticalSpace,
-                    AppTextFormField(
-                      controller: signUpProvider.nameController,
-                      hintText: "Name",
-                      isPassword: false,
-                      keyboardType: TextInputType.name,
-                      autofillHints: [AutofillHints.name],
-                      validator: signUpProvider.nameValidator,
-                    ),
-                    18.verticalSpace,
-                    AppTextFormField(
-                      controller: signUpProvider.emailController,
-                      isPassword: false,
-                      keyboardType: TextInputType.emailAddress,
-                      autofillHints: [AutofillHints.email],
-                      hintText: 'Email',
-                      validator: signUpProvider.emailValidator,
-                    ),
-                    18.verticalSpace,
-                    AppTextFormField(
-                      controller: signUpProvider.passwordController,
-                      isPassword: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      autofillHints: [AutofillHints.password],
-                      hintText: 'Password',
-                      validator: signUpProvider.passwordValidator,
-                    ),
-                    18.verticalSpace,
-                    AppTextFormField(
-                      controller: signUpProvider.passwordConfirmController,
-                      isPassword: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      autofillHints: [AutofillHints.password],
-                      hintText: 'Confirm Password',
-                      validator: signUpProvider.confirmPasswordValidator,
-                    ),
-                    18.verticalSpace,
-                    AppTextFormField(
-                      controller: signUpProvider.invitationCodeController,
-                      isPassword: false,
-                      keyboardType: TextInputType.text,
-                      autofillHints: [AutofillHints.password],
-                      hintText: 'Enter Invitation Code',
-                    ),
-                    25.verticalSpace,
-                    AppButton.getButton(
-                      loading: signUpProvider.signUpLoading,
-                      context: context,
-                      child: Text(
-                        'Create an Account',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w700, fontSize: 17),
-                      ),
-                      onPressed: () {
-                        signUpProvider.signUpApi(context);
-                      },
-                    ),
-                    10.verticalSpace,
-                    TextButton(
-                        onPressed: () {
-                          AppNavigator.pushNamed(context, RoutesName.login);
-                        },
-                        child: Text(
-                          "I already have an account",
-                          style: TextStyle(
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        )),
-                    15.verticalSpace,
-                    const Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Divider(),
-                    ),
-                    18.verticalSpace,
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Or continue with",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                    10.verticalSpace,
-                    Row(
+        body: Stack(
+          children: [
+            Image.asset(
+              AppImages.bg2,
+              fit: BoxFit.fill,
+              filterQuality: FilterQuality.high,
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height,
+              colorBlendMode: BlendMode.color,
+              color: const Color.fromARGB(255, 6, 51, 29),
+              isAntiAlias: true,
+            ),
+            SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Consumer<SignUpViewModel>(
+                  builder: (context, signUpProvider, child) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Form(
+                    key: signUpProvider.formKey,
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(AppImages.google),
-                        25.horizontalSpace,
-                        Image.asset(AppImages.facebook),
-                        25.horizontalSpace,
-                        Image.asset(AppImages.apple),
+                        (40 + 80).verticalSpace,
+                        AppTextFormField(
+                          controller: signUpProvider.nameController,
+                          hintText: "Name",
+                          isPassword: false,
+                          keyboardType: TextInputType.name,
+                          autofillHints: [AutofillHints.name],
+                          validator: signUpProvider.nameValidator,
+                        ),
+                        18.verticalSpace,
+                        AppTextFormField(
+                          controller: signUpProvider.emailController,
+                          isPassword: false,
+                          keyboardType: TextInputType.emailAddress,
+                          autofillHints: [AutofillHints.email],
+                          hintText: 'Email',
+                          validator: signUpProvider.emailValidator,
+                        ),
+                        18.verticalSpace,
+                        AppTextFormField(
+                          controller: signUpProvider.passwordController,
+                          isPassword: true,
+                          keyboardType: TextInputType.visiblePassword,
+                          autofillHints: [AutofillHints.password],
+                          hintText: 'Password',
+                          validator: signUpProvider.passwordValidator,
+                        ),
+                        18.verticalSpace,
+                        AppTextFormField(
+                          controller: signUpProvider.passwordConfirmController,
+                          isPassword: true,
+                          keyboardType: TextInputType.visiblePassword,
+                          autofillHints: [AutofillHints.password],
+                          hintText: 'Confirm Password',
+                          validator: signUpProvider.confirmPasswordValidator,
+                        ),
+                        18.verticalSpace,
+                        AppTextFormField(
+                          controller: signUpProvider.invitationCodeController,
+                          isPassword: false,
+                          keyboardType: TextInputType.text,
+                          autofillHints: [AutofillHints.password],
+                          hintText: 'Enter Invitation Code',
+                        ),
+                        25.verticalSpace,
+                        AppButton.getButton(
+                          loading: signUpProvider.signUpLoading,
+                          context: context,
+                          child: Text(
+                            'Create an Account',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(
+                                    fontWeight: FontWeight.w700, fontSize: 17),
+                          ),
+                          onPressed: () {
+                            signUpProvider.signUpApi(context);
+                          },
+                        ),
+                        10.verticalSpace,
+                        TextButton(
+                            onPressed: () {
+                              AppNavigator.pushNamed(context, RoutesName.login);
+                            },
+                            child: Text(
+                              "I already have an account",
+                              style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                                color: Colors.white.withOpacity(0.7),
+                              ),
+                            )),
+                        15.verticalSpace,
+                        const Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Divider(),
+                        ),
+                        18.verticalSpace,
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Or continue with",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                        10.verticalSpace,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(AppImages.google),
+                            25.horizontalSpace,
+                            Image.asset(AppImages.facebook),
+                            25.horizontalSpace,
+                            Image.asset(AppImages.apple),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );

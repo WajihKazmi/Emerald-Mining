@@ -24,10 +24,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           title: Text(
             'Notification',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Colors.white.withOpacity(
-                    0.9,
-                  ),
+                color: Colors.white.withOpacity(
+                  1,
                 ),
+                fontWeight: FontWeight.w600),
           ),
           leadingWidth: 80,
           leading: Container(
@@ -71,19 +71,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
             6.horizontalSpace,
           ],
         ),
+        backgroundColor: Color.fromARGB(255, 6, 40, 32),
         body: Stack(
           children: [
             Image.asset(
-              AppImages.background,
+              AppImages.bg2,
               fit: BoxFit.fill,
               filterQuality: FilterQuality.high,
               width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height,
+              colorBlendMode: BlendMode.color,
+              color: const Color.fromARGB(255, 6, 51, 29),
+              isAntiAlias: true,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  20.verticalSpace,
+                  (20).verticalSpace,
                   Expanded(
                     child: ListView.builder(
                       shrinkWrap: false,

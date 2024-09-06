@@ -27,67 +27,85 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            60.verticalSpace,
-            Image.asset(AppImages.logo),
-            30.verticalSpace,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                "Welcome to Emerald Mining",
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 27,
-                      fontWeight: FontWeight.w400,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            20.verticalSpace,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: Text(
-                "Sign up and join the Emerald world",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Spacer(),
-            AppButton.getButton(
-              context: context,
-              child: Text(
-                "Let's Start",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontWeight: FontWeight.w700, fontSize: 17),
-              ),
-              onPressed: () {
-                AppNavigator.pushNamed(context, RoutesName.signUp);
-              },
-            ),
-            10.verticalSpace,
-            TextButton(
-                onPressed: () {
-                  AppNavigator.pushNamed(context, RoutesName.login);
-                },
-                child: Text(
-                  "I already have an account",
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
-                    color: Colors.white.withOpacity(0.7),
+      body: Stack(
+        children: [
+          Image.asset(
+            AppImages.bg2,
+            fit: BoxFit.fill,
+            filterQuality: FilterQuality.high,
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height,
+            colorBlendMode: BlendMode.color,
+            color: const Color.fromARGB(255, 3, 42, 23),
+            isAntiAlias: true,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                60.verticalSpace,
+                Image.asset(AppImages.logo),
+                30.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    "Welcome to Emerald Mining",
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withBlue(60)
+                              .withGreen(110),
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                        ),
+                    textAlign: TextAlign.center,
                   ),
-                )),
-            15.verticalSpace,
-          ],
-        ),
+                ),
+                20.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  child: Text(
+                    "Sign up and join the Emerald world",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Spacer(),
+                AppButton.getButton(
+                  context: context,
+                  child: Text(
+                    "Let's Start",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w700, fontSize: 17),
+                  ),
+                  onPressed: () {
+                    AppNavigator.pushNamed(context, RoutesName.signUp);
+                  },
+                ),
+                10.verticalSpace,
+                TextButton(
+                    onPressed: () {
+                      AppNavigator.pushNamed(context, RoutesName.login);
+                    },
+                    child: Text(
+                      "I already have an account",
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                    )),
+                15.verticalSpace,
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

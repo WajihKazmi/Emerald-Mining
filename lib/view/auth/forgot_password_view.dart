@@ -29,6 +29,7 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       extendBody: true,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         toolbarHeight: 80,
         leading: IconButton(
           onPressed: () {
@@ -42,66 +43,88 @@ class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Consumer<ForgetPasswordViewModel>(
-            builder: (context, forgotPasswordProvider, child) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Form(
-              key: forgotPasswordProvider.formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  70.verticalSpace,
-                  Image.asset(AppImages.logo),
-                  30.verticalSpace,
-                  Text(
-                    "It's Allright!",
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 24,
-                        ),
-                  ),
-                  20.verticalSpace,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
-                      "Enter the email address associated with your account.",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  20.verticalSpace,
-                  AppTextFormField(
-                    controller: forgotPasswordProvider.emailController,
-                    hintText: "Email",
-                    isPassword: false,
-                    keyboardType: TextInputType.emailAddress,
-                    autofillHints: [AutofillHints.email],
-                    validator: forgotPasswordProvider.emailValidator,
-                  ),
-                  25.verticalSpace,
-                  AppButton.getButton(
-                    loading: forgotPasswordProvider.forgotPasswordLoading,
-                    context: context,
-                    child: Text(
-                      'Send Code',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.w700, fontSize: 17),
-                    ),
-                    onPressed: () {},
-                  ),
-                  15.verticalSpace,
-                ],
-              ),
+      body: Stack(
+        children: [
+          Image.asset(
+            AppImages.bg2,
+            fit: BoxFit.fill,
+            filterQuality: FilterQuality.high,
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height,
+            colorBlendMode: BlendMode.color,
+            color: const Color.fromARGB(255, 6, 51, 29),
+            isAntiAlias: true,
+          ),
+          SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-          );
-        }),
+            child: Consumer<ForgetPasswordViewModel>(
+                builder: (context, forgotPasswordProvider, child) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Form(
+                  key: forgotPasswordProvider.formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      70.verticalSpace,
+                      Image.asset(AppImages.logo),
+                      30.verticalSpace,
+                      Text(
+                        "It's Allright!",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 24,
+                            ),
+                      ),
+                      20.verticalSpace,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Text(
+                          "Enter the email address associated with your account.",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      20.verticalSpace,
+                      AppTextFormField(
+                        controller: forgotPasswordProvider.emailController,
+                        hintText: "Email",
+                        isPassword: false,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: [AutofillHints.email],
+                        validator: forgotPasswordProvider.emailValidator,
+                      ),
+                      25.verticalSpace,
+                      AppButton.getButton(
+                        loading: forgotPasswordProvider.forgotPasswordLoading,
+                        context: context,
+                        child: Text(
+                          'Send Code',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                  fontWeight: FontWeight.w700, fontSize: 17),
+                        ),
+                        onPressed: () {},
+                      ),
+                      15.verticalSpace,
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

@@ -69,17 +69,19 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          border: GradientBoxBorder(
-              width: 2,
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.onPrimaryContainer,
-                  Theme.of(context).colorScheme.primary,
-                ],
-                begin: Alignment(0.5, 0),
-                end: Alignment(0.5, 1),
-              ))),
+        borderRadius: BorderRadius.circular(30),
+        border: GradientBoxBorder(
+          width: 2,
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.onPrimaryContainer,
+              Theme.of(context).colorScheme.primary,
+            ],
+            begin: Alignment(0.5, 0),
+            end: Alignment(0.5, 1),
+          ),
+        ),
+      ),
       child: TextFormField(
         obscureText: _obscureText,
         obscuringCharacter: widget.obscuringCharacter,
@@ -100,7 +102,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         keyboardType: widget.keyboardType,
         textInputAction: TextInputAction.next,
         validator: widget.validator,
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+            ),
         decoration: InputDecoration(
           contentPadding:
               EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
@@ -112,7 +117,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           prefixIcon: widget.prefixIcon,
           hintText: widget.hintText,
           hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Colors.white.withOpacity(0.4),
+                color: Colors.white.withOpacity(0.6),
               ),
         ),
         controller: _controller,

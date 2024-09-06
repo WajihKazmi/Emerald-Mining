@@ -5,6 +5,7 @@ import 'package:emerald_mining/respository/auth/login_repository.dart';
 import 'package:emerald_mining/utils/routes/routes_name.dart';
 import 'package:emerald_mining/utils/utils.dart';
 import 'package:emerald_mining/view_model/services/token_view_model.dart';
+import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,14 +74,19 @@ class LoginViewModel with ChangeNotifier {
       if (res['data'] != null) {
         final tokenPreference =
             Provider.of<TokenViewModel>(context, listen: false);
-        tokenPreference
+        final userProvider = Provider.of<UserViewModel>(context, listen: false);
+        await tokenPreference
             .saveToken(TokenModel(token: response['access'].toString()));
+        int id = response['user']['id'];
+        await userProvider.userApi(context, id);
+        await utils.snackbar('Successfully Logged in!', context);
         AppNavigator.pushNamed(context, RoutesName.bottomNav);
       } else if (res['error'] != null) {
         utils.errorSnackbar(res['error'], context);
       } else {
         utils.errorSnackbar(
-            'An unexpected error occurred. Please try again later.', context);
+            'An unexpected error occurred. Please try again later.', context,
+            );
       }
     } catch (error) {
       print('Error: $error');
