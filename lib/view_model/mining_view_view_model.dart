@@ -10,35 +10,70 @@ import 'package:provider/provider.dart';
 
 class MiningViewViewModel with ChangeNotifier {
   final miningRepository = MiningRepository();
-  bool _Loading = true;
-  bool get Loading => _Loading;
 
-  setLoading(bool value) {
-    _Loading = value;
-    notifyListeners();
-  }
+  bool _loading = true; // Consistent naming
+  bool get loading => _loading;
+
+  bool _isFirstLoad = true; // Track if it's the first load
 
   late User user;
   late List<Machine> machines;
+
+  void setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
 
   Future<void> loadData(BuildContext context) async {
     final userProvider = Provider.of<UserViewModel>(context, listen: false);
     final String token =
         await Provider.of<TokenViewModel>(context, listen: false).getToken();
     user = userProvider.user;
-     
+
+    // Only show loading spinner on the first load
+    if (_isFirstLoad) {
+      setLoading(true);
+    }
+
     try {
-      final res = await miningRepository.machinesApi(token);
-      setLoading(false);
+      // Fetch the machines from the API
+      final res = await miningRepository.machinesApi(token, context);
+
       if (res['data'] != null) {
-        final response = json.decode(res['data']);
-        machines = response.map<Machine>((json) => Machine.fromJson(json)).toList();
-        print(response);
+        final response = json.decode(res['data']) as List;
+        machines =
+            response.map<Machine>((json) => Machine.fromJson(json)).toList();
       } else {
-        print(res['error']);
+        print(res['error']); // Error handled by repository snackbar
       }
     } catch (e) {
-      print(e);
+      print("Error loading machines: $e"); // Log the error
+    } finally {
+      // Only stop the spinner if it was the first load
+      if (_isFirstLoad) {
+        setLoading(false);
+        _isFirstLoad = false; // Mark the first load as done
+      }
+    }
+  }
+
+  Future<void> buyMachineApi(BuildContext context, int id) async {
+    final String token =
+        await Provider.of<TokenViewModel>(context, listen: false).getToken();
+
+    try {
+      var body = {"user": user.id, "machine": id};
+
+      // Call the repository to make the purchase
+      final res = await miningRepository.getMachineApi(token, body, context);
+
+      if (res['data'] != null) {
+        print('Purchase successful'); // Handle success
+      } else {
+        print(res['error']); // Error handled by repository snackbar
+      }
+    } catch (e) {
+      print("Error purchasing machine: $e"); // Log the error
     }
   }
 }

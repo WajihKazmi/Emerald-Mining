@@ -3,12 +3,14 @@ class Machine {
   final String name;
   final int price;
   final int coinsPerHour;
+  final int requiredInvites;
 
   Machine({
     required this.id,
     required this.name,
     required this.price,
     required this.coinsPerHour,
+    required this.requiredInvites,
   });
 
   // Factory constructor to create a Machine instance from JSON
@@ -18,6 +20,7 @@ class Machine {
       name: json['name'],
       price: json['price'],
       coinsPerHour: json['coins_per_hour'],
+      requiredInvites: json['required_invites'],
     );
   }
 

@@ -12,32 +12,10 @@ import 'package:provider/provider.dart';
 class SignUpViewModel with ChangeNotifier {
   final signUpRepository = SignUpRepository();
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmController = TextEditingController();
-  TextEditingController invitationCodeController = TextEditingController();
   Utils utils = Utils();
-  final formKey = GlobalKey<FormState>();
 
   bool _signUpLoading = false;
   bool get signUpLoading => _signUpLoading;
-
-  void initFields() {
-    nameController = TextEditingController();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    passwordConfirmController = TextEditingController();
-    invitationCodeController = TextEditingController();
-  }
-
-  void disposeFields() {
-    nameController.dispose();
-    invitationCodeController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    passwordConfirmController.dispose();
-  }
 
   setSignUpLoading(bool value) {
     _signUpLoading = value;
@@ -80,23 +58,13 @@ class SignUpViewModel with ChangeNotifier {
     return null;
   }
 
-  String? confirmPasswordValidator(String? value) {
-    if (value != passwordController.text) {
-      return 'Passwords do not match.';
-    }
-    return null;
-  }
-
-  Future<void> signUpApi(BuildContext context) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-
+  Future<void> signUpApi(BuildContext context, String cPassword,
+      String password, String email, String username) async {
     var data = {
-      "confirm_password": passwordConfirmController.text,
-      "password": passwordController.text,
-      "email": emailController.text,
-      "username": nameController.text
+      "confirm_password": cPassword,
+      "password": password,
+      "email": email,
+      "username": username
     };
 
     setSignUpLoading(true);
@@ -114,13 +82,6 @@ class SignUpViewModel with ChangeNotifier {
       } else if (res['error'] != null) {
         String errorMessage = res['error'].toString();
 
-        // Clear any previous errors
-
-        // emailController.clear();
-        // passwordController.clear();
-        // passwordConfirmController.clear();
-        // nameController.clear();
-        // invitationCodeController.clear();
         print(errorMessage);
         // Display error message
         utils.errorSnackbar(

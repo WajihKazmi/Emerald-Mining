@@ -10,6 +10,7 @@ import 'package:emerald_mining/view/stock_view.dart';
 import 'package:emerald_mining/view_model/bottom_nav_view_model.dart';
 import 'package:emerald_mining/view_model/services/token_view_model.dart';
 import 'package:emerald_mining/view_model/services/user_view_model.dart';
+import 'package:emerald_mining/view_model/video_runner_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -255,7 +256,7 @@ class _BottomNavViewState extends State<BottomNavView> {
       drawer: buildDrawer(context),
       body: PersistentTabView(
         onItemSelected: changeIndex,
-        navBarHeight: 75,
+        navBarHeight: 70,
         context,
         controller: controller,
         screens: _buildScreens(),
@@ -269,7 +270,7 @@ class _BottomNavViewState extends State<BottomNavView> {
         handleAndroidBackButtonPress: true,
         neumorphicProperties: NeumorphicProperties(),
         resizeToAvoidBottomInset: true,
-        stateManagement: true,
+        stateManagement: false,
         decoration: const NavBarDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),

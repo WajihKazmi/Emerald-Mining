@@ -4,6 +4,7 @@ import 'package:emerald_mining/resource/app_navigator.dart';
 import 'package:emerald_mining/respository/auth/login_repository.dart';
 import 'package:emerald_mining/utils/routes/routes_name.dart';
 import 'package:emerald_mining/utils/utils.dart';
+import 'package:emerald_mining/view_model/context_provider.dart';
 import 'package:emerald_mining/view_model/services/token_view_model.dart';
 import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,6 @@ import 'package:provider/provider.dart';
 class LoginViewModel with ChangeNotifier {
   final loginRepository = LoginRepository();
   final Utils utils = Utils();
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
 
   bool _loginLoading = false;
   bool get loginLoading => _loginLoading;
@@ -54,14 +51,8 @@ class LoginViewModel with ChangeNotifier {
     return null;
   }
 
-  Future<void> loginApi(BuildContext context) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-
-    String email = emailController.text;
-    String password = passwordController.text;
-
+  Future<void> loginApi(
+      BuildContext context, String email, String password) async {
     setLoginLoading(true);
 
     try {
@@ -75,18 +66,21 @@ class LoginViewModel with ChangeNotifier {
         final tokenPreference =
             Provider.of<TokenViewModel>(context, listen: false);
         final userProvider = Provider.of<UserViewModel>(context, listen: false);
+        final contextProvider =
+            Provider.of<ContextProvider>(context, listen: false);
+        contextProvider.setContext(context);
         await tokenPreference
             .saveToken(TokenModel(token: response['access'].toString()));
         int id = response['user']['id'];
         await userProvider.userApi(context, id);
-        await utils.snackbar('Successfully Logged in!', context);
-        AppNavigator.pushNamed(context, RoutesName.bottomNav);
+        Navigator.of(context).pushReplacementNamed(RoutesName.bottomNav);
       } else if (res['error'] != null) {
         utils.errorSnackbar(res['error'], context);
       } else {
         utils.errorSnackbar(
-            'An unexpected error occurred. Please try again later.', context,
-            );
+          'An unexpected error occurred. Please try again later.',
+          context,
+        );
       }
     } catch (error) {
       print('Error: $error');

@@ -12,13 +12,22 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  // Use a unique form key for this screen
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    // Dispose controllers to prevent memory leaks
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,6 +53,7 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       body: Stack(
         children: [
+          // Background image
           Image.asset(
             AppImages.bg2,
             fit: BoxFit.fill,
@@ -52,7 +62,7 @@ class LoginScreenState extends State<LoginScreen> {
             height: MediaQuery.sizeOf(context).height,
             colorBlendMode: BlendMode.color,
             color: const Color.fromARGB(255, 6, 51, 29),
-            isAntiAlias: true,
+            isAntiAlias: false,
           ),
           SingleChildScrollView(
             padding: EdgeInsets.only(
@@ -63,13 +73,13 @@ class LoginScreenState extends State<LoginScreen> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Form(
-                  key: loginProvider.formKey,
+                  key: _formKey, // Use the unique form key here
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       (60 + 80).verticalSpace,
                       AppTextFormField(
-                        controller: loginProvider.emailController,
+                        controller: emailController,
                         hintText: "Email",
                         isPassword: false,
                         keyboardType: TextInputType.emailAddress,
@@ -78,7 +88,7 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       18.verticalSpace,
                       AppTextFormField(
-                        controller: loginProvider.passwordController,
+                        controller: passwordController,
                         isPassword: true,
                         keyboardType: TextInputType.visiblePassword,
                         autofillHints: [AutofillHints.password],
@@ -115,29 +125,35 @@ class LoginScreenState extends State<LoginScreen> {
                                   fontWeight: FontWeight.w700, fontSize: 17),
                         ),
                         onPressed: () {
-                          loginProvider.loginApi(context);
-                          //AppNavigator.pushNamed(context, RoutesName.bottomNav);
+                          // Validate form and call login API
+                          if (_formKey.currentState?.validate() ?? false) {
+                            loginProvider.loginApi(
+                              context,
+                              emailController.text,
+                              passwordController.text,
+                            );
+                          }
                         },
                       ),
                       10.verticalSpace,
                       TextButton(
-                          onPressed: () {
-                            AppNavigator.pushNamed(context, RoutesName.signUp);
-                          },
-                          child: Text(
-                            "I don't have an account",
-                            style: TextStyle(
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          )),
+                        onPressed: () {
+                          AppNavigator.pushNamed(context, RoutesName.signUp);
+                        },
+                        child: Text(
+                          "I don't have an account",
+                          style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
                       40.verticalSpace,
                       const Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Divider(
                           thickness: 2,
-                          
                         ),
                       ),
                       18.verticalSpace,

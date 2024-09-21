@@ -1,6 +1,7 @@
 import 'package:emerald_mining/resource/app_navigator.dart';
 import 'package:emerald_mining/resource/components/machine_widget.dart';
 import 'package:emerald_mining/resource/images.dart';
+import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:emerald_mining/view_model/user_machine_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -23,6 +24,7 @@ class _MyMiningMachinesScreenState extends State<MyMiningMachinesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserViewModel>(context, listen: false);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: const Color.fromARGB(255, 6, 40, 32),
@@ -115,9 +117,11 @@ class _MyMiningMachinesScreenState extends State<MyMiningMachinesScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: MachineWidget(
-                              machine: provider.userMachines[index],
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 40),
+                            child: MachineWidget2(
+                              machine: provider.userMachines[index].machine,
+                              userInvites: user.user.successfulInvites,
                             ),
                           );
                         },

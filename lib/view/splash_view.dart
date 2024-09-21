@@ -27,27 +27,13 @@ class SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            AppImages.bg2,
-            fit: BoxFit.fill,
-            filterQuality: FilterQuality.high,
-            width: MediaQuery.sizeOf(context).width,
-            height: MediaQuery.sizeOf(context).height,
-            colorBlendMode: BlendMode.color,
-            color: const Color.fromARGB(255, 6, 51, 29),
-            isAntiAlias: true,
-          ),
-          Center(
-            child: Image.asset(
-              AppImages.splash,
-              fit: BoxFit.fill,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-            ),
-          ),
-        ],
+      body: Center(
+        child: Image.asset(
+          AppImages.bg3,
+          fit: BoxFit.fill,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+        ),
       ),
     );
   }

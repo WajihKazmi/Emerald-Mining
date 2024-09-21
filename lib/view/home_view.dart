@@ -1,14 +1,18 @@
+import 'dart:async'; // Import the dart async package
 import 'package:emerald_mining/main.dart';
 import 'package:emerald_mining/resource/app_navigator.dart';
 import 'package:emerald_mining/resource/images.dart';
 import 'package:emerald_mining/utils/routes/routes_name.dart';
+import 'package:emerald_mining/utils/utils.dart';
 import 'package:emerald_mining/view/notification_view.dart';
 import 'package:emerald_mining/view_model/coins_view_model.dart';
 import 'package:emerald_mining/view_model/home_view_model.dart';
+import 'package:emerald_mining/view_model/user_machine_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart'; // Import to use Haptic Feedback
 
 class HomeScreen extends StatefulWidget {
@@ -22,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  Timer? _timer; // Declare the timer
 
   @override
   void initState() {
@@ -34,14 +39,55 @@ class _HomeScreenState extends State<HomeScreen>
 
     // Load data on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HomeViewModel>(context, listen: false).loadData(context);
+      _loadData();
+      // Start the timer to load data every 1 minute
+      _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+        _loadData(); // Reload data every 1 minute
+      });
     });
+  }
+
+  Future<void> _collectCoins() async {
+    Utils utils = Utils();
+    UserMachineViewModel userMachineVM =
+        Provider.of<UserMachineViewModel>(context, listen: false);
+
+    int? lastCollectionTime = await userMachineVM.getLastCollectionTime();
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    if (lastCollectionTime != null) {
+      Duration timeDifference =
+          Duration(milliseconds: currentTime - lastCollectionTime);
+
+      if (timeDifference.inHours >= 1) {
+        // Allow multi-hour collection based on time passed
+        userMachineVM.collectAll(context);
+      } else {
+        // Show snackbar with remaining time
+        Duration remainingTime = Duration(hours: 1) - timeDifference;
+        String formattedTime = DateFormat('mm:ss').format(
+            DateTime.fromMillisecondsSinceEpoch(remainingTime.inMilliseconds));
+        utils.snackbar(
+            "Coins cannot be collected before $formattedTime minutes.",
+            context);
+      }
+    } else {
+      // No previous collection, collect coins
+      userMachineVM.collectAll(context);
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _timer?.cancel(); // Cancel the timer when disposing the screen
     super.dispose();
+  }
+
+  // Load data method to avoid duplicating code
+  void _loadData() {
+    Provider.of<HomeViewModel>(context, listen: false).loadData(context);
+    Provider.of<UserMachineViewModel>(context, listen: false).loadData(context);
   }
 
   void _onTapDown(TapDownDetails details) {
@@ -51,18 +97,28 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _onTapUp(TapUpDetails details) {
     _controller.reverse();
-    Provider.of<HomeViewModel>(context, listen: false).incrementCoins(context);
+    Provider.of<HomeViewModel>(context, listen: false).coinButton(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return Scaffold(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 80,
+          ),
+          child: FloatingActionButton(
+            onPressed: _collectCoins,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
+            child: Icon(Icons.av_timer),
+          ),
+        ),
         backgroundColor: Color.fromARGB(255, 6, 40, 32),
         extendBodyBehindAppBar: true,
         appBar: buildAppBar(context),
-        body: Consumer2<HomeViewModel, CoinsViewModel>(
-            builder: (context, provider, coins, child) {
+        body: Consumer3<HomeViewModel, CoinsViewModel, UserMachineViewModel>(
+            builder: (context, provider, coins, profitProvider, child) {
           if (provider.homeLoading) {
             //loading indicator
             return Center(child: CircularProgressIndicator());
@@ -145,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     ),
                                     5.horizontalSpace,
                                     Text(
-                                      '+2.17M',
+                                      '+${profitProvider.profit}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!

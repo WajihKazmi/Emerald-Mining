@@ -69,19 +69,19 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        border: GradientBoxBorder(
-          width: 2,
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).colorScheme.onPrimaryContainer,
-              Theme.of(context).colorScheme.primary,
-            ],
-            begin: Alignment(0.5, 0),
-            end: Alignment(0.5, 1),
+          borderRadius: BorderRadius.circular(30),
+          border: GradientBoxBorder(
+            width: 2,
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.onPrimaryContainer,
+                Theme.of(context).colorScheme.primary,
+              ],
+              begin: Alignment(0.5, 0),
+              end: Alignment(0.5, 1),
+            ),
           ),
-        ),
-      ),
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.7)),
       child: TextFormField(
         obscureText: _obscureText,
         obscuringCharacter: widget.obscuringCharacter,

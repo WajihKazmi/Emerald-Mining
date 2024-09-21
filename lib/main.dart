@@ -5,11 +5,15 @@ import 'package:emerald_mining/view_model/auth/login_view_model.dart';
 import 'package:emerald_mining/view_model/auth/sign_up_view_model.dart';
 import 'package:emerald_mining/view_model/bottom_nav_view_model.dart';
 import 'package:emerald_mining/view_model/coins_view_model.dart';
+import 'package:emerald_mining/view_model/context_provider.dart';
+import 'package:emerald_mining/view_model/earn_coins_view_model.dart';
 import 'package:emerald_mining/view_model/home_view_model.dart';
 import 'package:emerald_mining/view_model/mining_view_view_model.dart';
 import 'package:emerald_mining/view_model/send_coin_view_model.dart';
+import 'package:emerald_mining/view_model/send_invite_view_model.dart';
 import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:emerald_mining/view_model/user_machine_view_model.dart';
+import 'package:emerald_mining/view_model/video_runner_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,11 +50,13 @@ void main() {
     ChangeNotifierProvider(create: (_) => UserViewModel()),
     ChangeNotifierProvider(create: (_) => HomeViewModel()),
     ChangeNotifierProvider(create: (_) => MiningViewViewModel()),
-    
     ChangeNotifierProvider(create: (_) => SendCoinViewModel()),
     ChangeNotifierProvider(create: (_) => UserMachineViewModel()),
     ChangeNotifierProvider(create: (_) => CoinsViewModel()),
-
+    ChangeNotifierProvider(create: (_) => SendInviteViewModel()),
+    ChangeNotifierProvider(create: (_) => EarnCoinsViewModel()),
+    ChangeNotifierProvider(create: (_) => VideoRunnerProvider()),
+    ChangeNotifierProvider(create: (_) => ContextProvider()),
   ], child: const MyApp()));
 }
 

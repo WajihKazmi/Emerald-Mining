@@ -14,7 +14,7 @@ class UserViewModel with ChangeNotifier {
   bool _userLoading = false;
   bool get userLoading => _userLoading;
 
-   User user = User(id: 0, coins: 0, dateJoined: DateTime.now(), email: "", username: "");
+  User user = User();
 
   setUserLoading(bool value) {
     _userLoading = value;
@@ -33,7 +33,6 @@ class UserViewModel with ChangeNotifier {
       setUserLoading(false);
 
       if (res['data'] != null) {
-        print(response);
         user = User.fromJson(response);
         notifyListeners();
       } else {
