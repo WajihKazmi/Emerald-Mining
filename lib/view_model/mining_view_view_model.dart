@@ -66,7 +66,9 @@ class MiningViewViewModel with ChangeNotifier {
 
       // Call the repository to make the purchase
       final res = await miningRepository.getMachineApi(token, body, context);
-
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user1 = userProvider.user;
+      await userProvider.userApi(context, user1.id);
       if (res['data'] != null) {
         print('Purchase successful'); // Handle success
       } else {

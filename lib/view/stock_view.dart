@@ -3,11 +3,13 @@ import 'package:emerald_mining/resource/images.dart';
 import 'package:emerald_mining/view/notification_view.dart';
 import 'package:emerald_mining/view_model/context_provider.dart';
 import 'package:emerald_mining/view_model/earn_coins_view_model.dart';
+import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:emerald_mining/view_model/video_runner_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EarnScreen extends StatefulWidget {
   const EarnScreen({super.key});
@@ -163,13 +165,31 @@ class _EarnScreenState extends State<EarnScreen> {
                                   itemBuilder: (context, index) {
                                     final video =
                                         earnCoinsViewModel.emeraldVideos[index];
-                                    return taskTile(() {
+                                    return taskTile(
+                                      //() {
                                       // Trigger videoPlayer function when "Watch Now" is pressed
-                                      Provider.of<VideoRunnerProvider>(context,
-                                              listen: false)
-                                          .startVideo(context, video.url,
-                                              video.id.toString(), 30);
-                                    }, video.title, video.coinReward.toString(),
+                                      // Provider.of<VideoRunnerProvider>(context,
+                                      //         listen: false)
+                                      //     .startVideo(context, video.url,
+                                      //         video.id.toString(), 30);
+                                      () async {
+              // Open the URL in the platform's app
+              if (await canLaunchUrl(Uri.parse(video.url))) {
+                await launchUrl(Uri.parse(video.url));
+
+                // Once the user disposes the page, complete the task
+                 await Provider.of<EarnCoinsViewModel>(context, listen: false)
+          .watchedVideo(context, video.id.toString());
+
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user = userProvider.user;
+      await userProvider.userApi(context, user.id);
+
+              } else {
+                print("Could not launch ${video.url}");
+              }
+            }
+                                    , video.title, video.coinReward.toString(),
                                         AppImages.youtube, false);
                                   },
                                 ),
@@ -215,11 +235,44 @@ class _EarnScreenState extends State<EarnScreen> {
                                       await earnCoinsViewModel.claimCoin(
                                           context, task.id.toString());
                                     }, task.title, task.coinReward.toString(),
-                                        AppImages.exchange, true);
+                                        AppImages.dailyTask, true);
                                   },
                                 ),
+                          15.verticalSpace,
+                          Text(
+                            "Social Task",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17,
+                                ),
+                          ),
 
-                          50.verticalSpace,
+                          earnCoinsViewModel.socialTasks.isEmpty
+                              ? Container()
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      earnCoinsViewModel.socialTasks.length,
+                                  itemBuilder: (context, index) {
+                                    final task =
+                                        earnCoinsViewModel.socialTasks[index];
+                                    return socialTile(
+                                      task.title,
+                                      task.coinReward.toString(),
+                                      task.url,
+                                      () async {
+                                        // Call socialTaskDone after the platform app is closed
+                                        await earnCoinsViewModel.socialTaskDone(
+                                            context, task.id.toString());
+                                      },
+                                    );
+                                  },
+                                ),
+                          70.verticalSpace,
                         ],
                       ),
                     );
@@ -277,6 +330,87 @@ class _EarnScreenState extends State<EarnScreen> {
             ),
             const Spacer(),
             button(onPressed, isDailyTask ? "Use now" : "Watch Now"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget socialTile(
+    String title,
+    String coins,
+    String url,
+    Function() onTaskComplete,
+  ) {
+    String icon = '';
+    if (title == 'Facebook') {
+      icon = AppImages.facebook;
+    } else if (title == 'YouTube') {
+      icon = AppImages.youtube;
+    } else if (title == 'X') {
+      icon = AppImages.x;
+    } else if (title == 'Instagram') {
+      icon = AppImages.instagram;
+    } else if (title == 'TikTok') {
+      icon = AppImages.tiktok;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset(
+              icon,
+              height: 70,
+              scale: 0.9,
+            ),
+            5.horizontalSpace,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "  $title",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontWeight: FontWeight.w600),
+                ),
+                Row(
+                  children: [
+                    Image.asset(
+                      AppImages.emerald,
+                      scale: 1.2,
+                    ),
+                    3.horizontalSpace,
+                    Text(
+                      "+$coins Coin",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const Spacer(),
+            button(() async {
+              // Open the URL in the platform's app
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+
+                // Once the user disposes the page, complete the task
+                onTaskComplete();
+              } else {
+                print("Could not launch $url");
+              }
+            }, title == "YouTube" ? "Subscribe" : "Follow"),
           ],
         ),
       ),

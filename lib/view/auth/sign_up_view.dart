@@ -136,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             keyboardType: TextInputType.text,
                             hintText: 'Enter Invitation Code',
                           ),
-                          25.verticalSpace,
+                          55.verticalSpace,
                           AppButton.getButton(
                             loading: signUpProvider.signUpLoading,
                             context: context,
@@ -165,8 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           10.verticalSpace,
                           TextButton(
                             onPressed: () {
-                              AppNavigator.pushNamed(
-                                  context, RoutesName.login);
+                              AppNavigator.pushNamed(context, RoutesName.login);
                             },
                             child: Text(
                               "I already have an account",
@@ -178,33 +177,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                           15.verticalSpace,
-                          const Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 20),
-                            child: Divider(),
-                          ),
-                          18.verticalSpace,
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "Or continue with",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                            ),
-                          ),
-                          10.verticalSpace,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(AppImages.google),
-                              25.horizontalSpace,
-                              Image.asset(AppImages.facebook),
-                              25.horizontalSpace,
-                              Image.asset(AppImages.apple),
-                            ],
-                          ),
+                          // const Padding(
+                          //   padding:
+                          //       EdgeInsets.symmetric(horizontal: 20),
+                          //   child: Divider(),
+                          // ),
+                          // 18.verticalSpace,
+                          // TextButton(
+                          //   onPressed: () {},
+                          //   child: Text(
+                          //     "Or continue with",
+                          //     style: TextStyle(
+                          //       fontSize: 16,
+                          //       color: Colors.white.withOpacity(0.7),
+                          //     ),
+                          //   ),
+                          // ),
+                          // 10.verticalSpace,
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     Image.asset(AppImages.google),
+                          //     25.horizontalSpace,
+                          //     Image.asset(AppImages.facebook),
+                          //     25.horizontalSpace,
+                          //     Image.asset(AppImages.apple),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),

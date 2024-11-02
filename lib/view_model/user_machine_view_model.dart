@@ -64,6 +64,7 @@ class UserMachineViewModel with ChangeNotifier {
       setLoading(false);
       if (res['data'] != null) {
         final response = json.decode(res['data']);
+        
         print(response);
       } else {
         print(res['error']);
@@ -77,7 +78,10 @@ class UserMachineViewModel with ChangeNotifier {
     for (var machine in userMachines) {
       await collectCoins(context, machine.id);
     }
-    utils.snackbar("Successfully Collected Coins", context);
+    final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user = userProvider.user;
+      await userProvider.userApi(context, user.id);
+    
 
     // Save the current time as the last collection time in SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();

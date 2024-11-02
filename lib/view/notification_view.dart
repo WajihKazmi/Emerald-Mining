@@ -90,63 +90,72 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  (20).verticalSpace,
-                  Expanded(
-                    child: Consumer<EarnCoinsViewModel>(
-                      builder: (context, earnCoinsViewModel, child) {
-                        if (earnCoinsViewModel.Loading) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
+                  Text(
+                    'Coming Soon  ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(fontWeight: FontWeight.w900, fontSize: 35),
+                    textAlign: TextAlign.center,
+                  ),
+                  // Expanded(
+                  //   child: Consumer<EarnCoinsViewModel>(
+                  //     builder: (context, earnCoinsViewModel, child) {
+                  //       if (earnCoinsViewModel.Loading) {
+                  //         return const Center(
+                  //           child: CircularProgressIndicator(),
+                  //         );
+                  //       }
 
-                        if (earnCoinsViewModel.emeraldVideos.isEmpty) {
-                          return Center(
-                            child: Text(
-                              "No new notifications",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 17,
-                                    color: Colors.white.withOpacity(0.8),
-                                  ),
-                            ),
-                          );
-                        }
+                  //       if (earnCoinsViewModel.emeraldVideos.isEmpty) {
+                  //         return Center(
+                  //           child: Text(
+                  //             "No new notifications",
+                  //             style: Theme.of(context)
+                  //                 .textTheme
+                  //                 .bodyLarge!
+                  //                 .copyWith(
+                  //                   fontWeight: FontWeight.w600,
+                  //                   fontSize: 17,
+                  //                   color: Colors.white.withOpacity(0.8),
+                  //                 ),
+                  //           ),
+                  //         );
+                  //       }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            50.verticalSpace, // Additional spacing after the AppBar
+                  //       return Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           50.verticalSpace, // Additional spacing after the AppBar
 
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: earnCoinsViewModel.emeraldVideos.length,
-                              itemBuilder: (context, index) {
-                                final video =
-                                    earnCoinsViewModel.emeraldVideos[index];
-                                return taskTile(() {
-                                  // Trigger videoPlayer function when "Watch Now" is pressed
+                  //           ListView.builder(
+                  //             shrinkWrap: true,
+                  //             physics: const NeverScrollableScrollPhysics(),
+                  //             itemCount: earnCoinsViewModel.emeraldVideos.length,
+                  //             itemBuilder: (context, index) {
+                  //               final video =
+                  //                   earnCoinsViewModel.emeraldVideos[index];
+                  //               return taskTile(() {
+                  //                 // Trigger videoPlayer function when "Watch Now" is pressed
 
-                                  Provider.of<VideoRunnerProvider>(context,
-                                          listen: false)
-                                      .startVideo(context, video.url,
-                                          video.id.toString(), 5);
-                                }, video.title, video.coinReward.toString(),
-                                    AppImages.youtube, false);
-                              },
-                            ),
+                  //                 Provider.of<VideoRunnerProvider>(context,
+                  //                         listen: false)
+                  //                     .startVideo(context, video.url,
+                  //                         video.id.toString(), 5);
+                  //               }, video.title, video.coinReward.toString(),
+                  //                   AppImages.youtube, false);
+                  //             },
+                  //           ),
 
-                            50.verticalSpace,
-                          ],
-                        );
-                      },
-                    ),
-                  )
+                  //           50.verticalSpace,
+                  //         ],
+                  //       );
+                  //     },
+                  //   ),
+                  // )
                 ],
               ),
             ),

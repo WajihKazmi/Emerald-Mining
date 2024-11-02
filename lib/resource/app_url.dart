@@ -16,4 +16,5 @@ class AppUrl {
   static var sendInvite = '$baseUrl/user/api/send-invite/';
   static var videos = '$baseUrl/api/v1/Emaralds-videos/';
   static var dailyReward = '$baseUrl/api/v1/daily-tasks/';
+  static var socialAccountsTask = '$baseUrl/api/v1/social-accounts/';
 }

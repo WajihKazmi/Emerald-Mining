@@ -356,10 +356,41 @@ class _BottomNavViewState extends State<BottomNavView> {
             ),
             Spacer(),
             GestureDetector(
-              onTap: () {
-                Provider.of<TokenViewModel>(context, listen: false)
-                    .removeToken();
-                Navigator.of(context).pushReplacementNamed(RoutesName.login);
+              onTap: () async {
+                bool? confirmLogout = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      title: Text(
+                        "Logout Confirmation",
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      content: Text("Are you sure you want to logout?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false); // User canceled
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true); // User confirmed
+                          },
+                          child: Text("Logout"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                // If user confirms logout
+                if (confirmLogout == true) {
+                  Provider.of<TokenViewModel>(context, listen: false)
+                      .removeToken();
+                  Navigator.of(context).pushReplacementNamed(RoutesName.login);
+                }
               },
               child: Row(
                 children: [

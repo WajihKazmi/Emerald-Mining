@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:emerald_mining/model/daily_task_model.dart';
 import 'package:emerald_mining/model/emerald_videos_model.dart';
 import 'package:emerald_mining/model/machine_model.dart';
+import 'package:emerald_mining/model/social_account_task_model.dart';
 import 'package:emerald_mining/model/user_model.dart';
 import 'package:emerald_mining/respository/earn_coin_repository.dart';
 import 'package:emerald_mining/respository/mining_repository.dart';
@@ -27,6 +28,7 @@ class EarnCoinsViewModel with ChangeNotifier {
 
   List<EmeraldVideo> emeraldVideos = [];
   List<DailyTask> dailyTasks = [];
+  List<SocialAccountTask> socialTasks = [];
 
   Future<void> loadData(BuildContext context) async {
     final String token =
@@ -35,20 +37,22 @@ class EarnCoinsViewModel with ChangeNotifier {
     try {
       final res = await earnCoinRepository.youtubeVideosApi(token);
       final res2 = await earnCoinRepository.dailyRewardsApi(token);
+      final res3 = await earnCoinRepository.socialAccountApi(token);
       setLoading(false);
       if (res['data'] != null) {
         final response = json.decode(res['data']);
         final response2 = json.decode(res2['data']);
-        print(response);
-        print(response2);
+        final response3 = json.decode(res3['data']);
+
         emeraldVideos = response
             .map<EmeraldVideo>((json) => EmeraldVideo.fromJson(json))
             .toList();
         dailyTasks = response2
             .map<DailyTask>((json) => DailyTask.fromJson(json))
             .toList();
-
-        print(response);
+        socialTasks = response3
+            .map<SocialAccountTask>((json) => SocialAccountTask.fromJson(json))
+            .toList();
       } else {
         print(res['error']);
       }
@@ -63,7 +67,10 @@ class EarnCoinsViewModel with ChangeNotifier {
     try {
       final res = await earnCoinRepository.youtubeVideosUseApi(token, id);
 
-      
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user = userProvider.user;
+      await userProvider.userApi(context, user.id);
+      loadData(context);
       if (res['data'] != null) {
         final response = json.decode(res['data']);
         print(response);
@@ -75,13 +82,38 @@ class EarnCoinsViewModel with ChangeNotifier {
       print(e);
     }
   }
+
+  Future<void> socialTaskDone(BuildContext context, String id) async {
+    final String token =
+        await Provider.of<TokenViewModel>(context, listen: false).getToken();
+    try {
+      final res = await earnCoinRepository.socialAccountUseApi(token, id);
+
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user = userProvider.user;
+      await userProvider.userApi(context, user.id);
+      loadData(context);
+      if (res['data'] != null) {
+        final response = json.decode(res['data']);
+        print(response);
+        utils.snackbar("Coin Added Succesfully", context);
+      } else {
+        print(res['error']);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> claimCoin(BuildContext context, String id) async {
     final String token =
         await Provider.of<TokenViewModel>(context, listen: false).getToken();
     try {
       final res = await earnCoinRepository.dailyRewardUseApi(token, id);
-      
-      
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final user = userProvider.user;
+      await userProvider.userApi(context, user.id);
+      loadData(context);
       if (res['data'] != null) {
         final response = json.decode(res['data']);
         print(response);

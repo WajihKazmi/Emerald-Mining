@@ -14,10 +14,7 @@ class SendCoinViewModel with ChangeNotifier {
   final sendCoinRepository = SendCoinRepository();
   final Utils utils = Utils();
 
-  final TextEditingController userNameController = TextEditingController();
-  final TextEditingController userIDController = TextEditingController();
-  final TextEditingController coinController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+ // final formKey = GlobalKey<FormState>();
 
   bool _sendCoinLoading = false;
   bool get sendCoinLoading => _sendCoinLoading;
@@ -27,36 +24,31 @@ class SendCoinViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendCoinApi(BuildContext context) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
+  Future<void> sendCoinApi(BuildContext context, String userName,
+      int coins) async {
+    // if (!formKey.currentState!.validate()) {
+    //   return;
+    // }
     final String token =
         await Provider.of<TokenViewModel>(context, listen: false).getToken();
-
-    String userName = userNameController.text;
-    String userID = userIDController.text;
-    String coins = coinController.text;
 
     setSendCoinLoading(true);
 
     try {
       var body = {
         "recipient_username": userName,
-        "recipient_id": userID,
         "coins": coins,
       };
 
       final res = await sendCoinRepository.sendCoinApi(body, token);
       final response = json.decode(res['data']);
+
+      print(response);
       setSendCoinLoading(false);
 
       if (res['data'] != null) {
         await utils.snackbar('Successfully sent coins!', context);
         AppNavigator.pushNamed(context, RoutesName.bottomNav);
-        userIDController.clear();
-        userNameController.clear();
-        coinController.clear();
       } else if (res['error'] != null) {
         utils.errorSnackbar(res['error'], context);
       } else {
@@ -78,16 +70,7 @@ class SendCoinViewModel with ChangeNotifier {
     return null;
   }
 
-  // Validator for User ID
-  String? validateUserID(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'User ID cannot be empty';
-    }
-    if (int.tryParse(value.trim()) == null) {
-      return 'User ID must be an integer';
-    }
-    return null;
-  }
+ 
 
   // Validator for Coins
   String? validateCoins(String? value) {

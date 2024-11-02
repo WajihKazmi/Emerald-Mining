@@ -17,7 +17,7 @@ class SplashViewState extends State<SplashView> {
 
   @override
   void initState() {
-    splashServices.checkAuthentication(context);
+    splashServices.checkLoginStatus(context);
     // Future.delayed(const Duration(seconds: 2), () {
     //   AppNavigator.pushNamed(context, RoutesName.login);
     // });

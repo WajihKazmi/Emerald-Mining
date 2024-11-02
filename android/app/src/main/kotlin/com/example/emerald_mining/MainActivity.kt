@@ -1,4 +1,4 @@
-package com.example.emerald_mining
+package com.emerald.emerald_mining
 
 import io.flutter.embedding.android.FlutterActivity
 

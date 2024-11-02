@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:emerald_mining/view_model/auth/forgot_password_view_model.dart';
 import 'package:emerald_mining/view_model/auth/login_view_model.dart';
 import 'package:emerald_mining/view_model/auth/sign_up_view_model.dart';

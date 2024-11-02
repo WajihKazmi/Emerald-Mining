@@ -9,6 +9,7 @@ import 'package:emerald_mining/view_model/services/token_view_model.dart';
 import 'package:emerald_mining/view_model/services/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel with ChangeNotifier {
   final loginRepository = LoginRepository();
@@ -51,41 +52,51 @@ class LoginViewModel with ChangeNotifier {
     return null;
   }
 
-  Future<void> loginApi(
-      BuildContext context, String email, String password) async {
-    setLoginLoading(true);
+ Future<void> loginApi(
+    BuildContext context, String email, String password,bool rememberMe) async {
+  setLoginLoading(true);
 
-    try {
-      var body = {"email": email, "password": password};
+  try {
+    var body = {"email": email, "password": password};
 
-      final res = await loginRepository.loginApi(body);
-      final response = json.decode(res['data']);
-      setLoginLoading(false);
+    final res = await loginRepository.loginApi(body);
+    final response = json.decode(res['data']);
+    setLoginLoading(false);
 
-      if (res['data'] != null) {
-        final tokenPreference =
-            Provider.of<TokenViewModel>(context, listen: false);
-        final userProvider = Provider.of<UserViewModel>(context, listen: false);
-        final contextProvider =
-            Provider.of<ContextProvider>(context, listen: false);
-        contextProvider.setContext(context);
-        await tokenPreference
-            .saveToken(TokenModel(token: response['access'].toString()));
-        int id = response['user']['id'];
-        await userProvider.userApi(context, id);
-        Navigator.of(context).pushReplacementNamed(RoutesName.bottomNav);
-      } else if (res['error'] != null) {
-        utils.errorSnackbar(res['error'], context);
-      } else {
-        utils.errorSnackbar(
-          'An unexpected error occurred. Please try again later.',
-          context,
-        );
+    if (res['data'] != null) {
+      final tokenPreference =
+          Provider.of<TokenViewModel>(context, listen: false);
+      final userProvider = Provider.of<UserViewModel>(context, listen: false);
+      final contextProvider =
+          Provider.of<ContextProvider>(context, listen: false);
+      contextProvider.setContext(context);
+      await tokenPreference
+          .saveToken(TokenModel(token: response['access'].toString()));
+      
+      // Save the token creation date and user ID in SharedPreferences
+      if (rememberMe) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', response['user']['id'].toString());
+        await prefs.setString('token', response['access']);
+        await prefs.setString('tokenCreationDate', DateTime.now().toString());
       }
-    } catch (error) {
-      print('Error: $error');
-      utils.errorSnackbar('An unexpected error occurred', context);
-      setLoginLoading(false);
+
+      int id = response['user']['id'];
+      await userProvider.userApi(context, id);
+      Navigator.of(context).pushReplacementNamed(RoutesName.bottomNav);
+    } else if (res['error'] != null) {
+      utils.errorSnackbar(res['error'], context);
+    } else {
+      utils.errorSnackbar(
+        'An unexpected error occurred. Please try again later.',
+        context,
+      );
     }
+  } catch (error) {
+    print('Error: $error');
+    utils.errorSnackbar('An unexpected error occurred', context);
+    setLoginLoading(false);
   }
+}
+
 }

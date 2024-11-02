@@ -18,6 +18,9 @@ class SendCoinsScreen extends StatefulWidget {
 }
 
 class _SendCoinsScreenState extends State<SendCoinsScreen> {
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController coinController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,29 +82,22 @@ class _SendCoinsScreenState extends State<SendCoinsScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Form(
-                  key: provider.formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       (40 + 80).verticalSpace,
                       AppTextFormField(
                         hintText: "Enter Username",
-                        controller: provider.userNameController,
+                        controller: userNameController,
                         isPassword: false,
                         keyboardType: TextInputType.name,
                         validator: provider.validateUsername,
                       ),
-                      20.verticalSpace,
-                      AppTextFormField(
-                        hintText: "Enter User ID",
-                        controller: provider.userIDController,
-                        isPassword: false,
-                        keyboardType: TextInputType.name,
-                        validator: provider.validateUserID,
-                      ),
+                      
                       20.verticalSpace,
                       AppTextFormField(
                         hintText: "Enter Coins",
-                        controller: provider.coinController,
+                        controller: coinController,
                         isPassword: false,
                         keyboardType: TextInputType.number,
                         validator: provider.validateCoins,
@@ -119,7 +115,17 @@ class _SendCoinsScreenState extends State<SendCoinsScreen> {
                                     fontWeight: FontWeight.w700, fontSize: 17),
                           ),
                           onPressed: () {
-                            provider.sendCoinApi(context);
+                            // Parse the text from coinController to an integer
+                            int coinValue =
+                                int.tryParse(coinController.text) ?? 0;
+
+                            if (_formKey.currentState?.validate() ?? false) {
+                              provider.sendCoinApi(
+                                  context,
+                                  userNameController.text,
+                                 
+                                  coinValue);
+                            }
                           })
                     ],
                   ),

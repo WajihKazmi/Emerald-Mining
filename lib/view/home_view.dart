@@ -60,8 +60,14 @@ class _HomeScreenState extends State<HomeScreen>
           Duration(milliseconds: currentTime - lastCollectionTime);
 
       if (timeDifference.inHours >= 1) {
-        // Allow multi-hour collection based on time passed
-        userMachineVM.collectAll(context);
+        int hoursToCollect =
+            timeDifference.inHours > 6 ? 6 : timeDifference.inHours;
+
+        for (int i = 0; i < hoursToCollect; i++) {
+          userMachineVM.collectAll(context);
+        }
+        utils.snackbar(
+            "Successfully Collected Profit of $hoursToCollect hours!", context);
       } else {
         // Show snackbar with remaining time
         Duration remainingTime = Duration(hours: 1) - timeDifference;
@@ -97,6 +103,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _onTapUp(TapUpDetails details) {
     _controller.reverse();
+    // final coinProvider = Provider.of<CoinsViewModel>(context, listen: false);
+
+    // coinProvider.incrementCoins();
     Provider.of<HomeViewModel>(context, listen: false).coinButton(context);
   }
 
@@ -104,16 +113,16 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return Scaffold(
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 80,
-          ),
-          child: FloatingActionButton(
-            onPressed: _collectCoins,
-            backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            child: Icon(Icons.av_timer),
-          ),
-        ),
+        // floatingActionButton: Padding(
+        //   padding: const EdgeInsets.only(
+        //     bottom: 100,
+        //   ),
+        //   child: FloatingActionButton(
+        //     onPressed: _collectCoins,
+        //     backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        //     child: Icon(Icons.av_timer),
+        //   ),
+        // ),
         backgroundColor: Color.fromARGB(255, 6, 40, 32),
         extendBodyBehindAppBar: true,
         appBar: buildAppBar(context),
@@ -121,7 +130,9 @@ class _HomeScreenState extends State<HomeScreen>
             builder: (context, provider, coins, profitProvider, child) {
           if (provider.homeLoading) {
             //loading indicator
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return Stack(
               children: [
@@ -184,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen>
                             Column(
                               children: [
                                 Text(
-                                  'Profit Per Hours',
+                                  'Profit Per Hour',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
@@ -210,20 +221,23 @@ class _HomeScreenState extends State<HomeScreen>
                                             fontSize: 18,
                                           ),
                                     ),
-                                    5.horizontalSpace,
-                                    Image.asset(
-                                      AppImages.info,
-                                      scale: 0.8,
-                                    ),
+                                    // Image.asset(
+                                    //   AppImages.info,
+                                    //   scale: 0.8,
+                                    // ),
                                   ],
                                 )
                               ],
                             ),
-                            Image.asset(
-                              AppImages.setting,
-                              fit: BoxFit.fill,
-                              scale: 0.8,
+                            IconButton(
+                              onPressed: _collectCoins,
+                              icon: Icon(
+                                Icons.av_timer,
+                                size: 35,
+                                color: Colors.white,
+                              ),
                             ),
+                            //15.horizontalSpace
                           ],
                         ),
                       ),

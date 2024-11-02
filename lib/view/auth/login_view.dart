@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool rememberMe = false;
 
   @override
   void dispose() {
@@ -95,7 +96,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         hintText: 'Password',
                         validator: loginProvider.passwordValidator,
                       ),
-                      12.verticalSpace,
+                      10.verticalSpace,
+                      CheckboxListTile(
+                        side: BorderSide(color: Colors.white, width: 1.1),
+                        title: Text(
+                          "Remember Me",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                        value: rememberMe,
+                        onChanged: (newValue) {
+                          setState(() {
+                            rememberMe = newValue ?? false;
+                          });
+                        },
+                      ),
+                      10.verticalSpace,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Divider(
+                          color: Theme.of(context).colorScheme.primary,
+                          thickness: .5,
+                        ),
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -128,10 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Validate form and call login API
                           if (_formKey.currentState?.validate() ?? false) {
                             loginProvider.loginApi(
-                              context,
-                              emailController.text,
-                              passwordController.text,
-                            );
+                                context,
+                                emailController.text,
+                                passwordController.text,
+                                rememberMe);
                           }
                         },
                       ),
@@ -150,34 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       40.verticalSpace,
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Divider(
-                          thickness: 2,
-                        ),
-                      ),
-                      18.verticalSpace,
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Or login with",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        ),
-                      ),
-                      10.verticalSpace,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(AppImages.google),
-                          25.horizontalSpace,
-                          Image.asset(AppImages.facebook),
-                          25.horizontalSpace,
-                          Image.asset(AppImages.apple),
-                        ],
-                      ),
                     ],
                   ),
                 ),
