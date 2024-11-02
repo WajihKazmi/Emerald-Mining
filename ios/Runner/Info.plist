@@ -45,20 +45,12 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
-    
-    <!-- Moved NSAppTransportSecurity inside the main dict -->
+
+    <!-- Added NSAppTransportSecurity within the main dict -->
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
-
-    <!-- Add permissions if needed -->
-    <!-- For example, for camera or microphone access -->
-    <!-- <key>NSCameraUsageDescription</key> -->
-    <!-- <string>This app requires camera access for user interaction.</string> -->
-    <!-- <key>NSMicrophoneUsageDescription</key> -->
-    <!-- <string>This app requires microphone access for audio recording.</string> -->
-
 </dict>
 </plist>
